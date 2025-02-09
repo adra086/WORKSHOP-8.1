@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Random Dog API</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+  </head>
+  <body>
+    <h1 style="text-align: center;">Random Dog Image Generator 🐶</h1>
+    <p style="text-align: center;">Press any key to fetch a new random dog!</p>
+
+    <script>
+      let dogImage;
+
+      function setup() {
+        createCanvas(600, 400);
+        background(200);
+        fetchDogImage();  // Fetch a random dog image on start
+      }
+
+      function fetchDogImage() {
+        fetch('https://dog.ceo/api/breeds/image/random')
+          .then(response => response.json())
+          .then(data => {
+            // Load the dog image asynchronously and display it once loaded
+            dogImage = loadImage(data.message, () => {
+              background(220);  // Clear the canvas
+              imageMode(CENTER);
+              image(dogImage, width / 2, height / 2, 400, 300);  // Display image
+            });
+          })
+          .catch(err => {
+            console.error('Error fetching the dog image:', err);
+            background(255, 0, 0);  // Red background for error indication
+            textAlign(CENTER, CENTER);
+            textSize(20);
+            fill(255);
+            text('Failed to load dog image. Please try again.', width / 2, height / 2);
+          });
+      }
+
+      // Press any key to fetch a new dog image
+      function keyPressed() {
+        fetchDogImage();
+      }
+    </script>
+  </body>
+</html>
